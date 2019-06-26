@@ -69,7 +69,7 @@ public class Main {
         filteredStudentListFile.forEach(System.out::println);
     }
     public Main(){
-        System.out.println("Hello GitHub!");
+        studentTableDemo();
     }
 
     public static void main(String[] args) {

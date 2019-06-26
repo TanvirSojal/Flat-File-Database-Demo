@@ -1,6 +1,7 @@
 import databaseoperations.mysqloperations.StudentDAOMySQLImplementation;
 import entities.Student;
 import interfaces.StudentDAO;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +19,6 @@ class StudentDAOMySQLImplementationTest {
         studentDAO.deleteAll();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void testCreate() {
@@ -44,9 +42,8 @@ class StudentDAOMySQLImplementationTest {
         studentList.add(new Student("222", "test1"));
         studentList.add(new Student("333", "test2"));
 
-        studentDAO.create(studentList.get(0));
-        studentDAO.create(studentList.get(1));
-        studentDAO.create(studentList.get(2));
+        for (Student student : studentList)
+            studentDAO.create(student);
 
         List<Student> retrievedStudentList = studentDAO.retrieve();
         assertEquals(studentList.size(), retrievedStudentList.size());
@@ -61,13 +58,12 @@ class StudentDAOMySQLImplementationTest {
         studentList.add(new Student("222", "test1"));
         studentList.add(new Student("333", "test2"));
 
-        studentDAO.create(studentList.get(0));
-        studentDAO.create(studentList.get(1));
-        studentDAO.create(studentList.get(2));
+        for (Student student : studentList)
+            studentDAO.create(student);
 
-        List<Student> retrievedStudentList = studentDAO.retrieve(s -> s.getId().equals("222"));
+        List<Student> retrievedStudentList = studentDAO.retrieve(student -> student.getId().equals("222"));
         assertEquals(1, retrievedStudentList.size());
-        assertEquals("test1", retrievedStudentList.get(0).getName());
+        assertEquals(studentList.get(1).getName(), retrievedStudentList.get(0).getName());
     }
 
     @Test
@@ -76,8 +72,8 @@ class StudentDAOMySQLImplementationTest {
         studentDAO.create(student);
 
         Student modifiedStudent = new Student("123", "John");
-        studentDAO.update(student.getId(), modifiedStudent);
-        assertEquals(modifiedStudent, studentDAO.retrieve(student.getId()));
+        Student updatedStudent = studentDAO.update(student.getId(), modifiedStudent);
+        assertEquals(modifiedStudent, updatedStudent);
     }
 
     @Test
@@ -87,9 +83,8 @@ class StudentDAOMySQLImplementationTest {
         studentList.add(new Student("222", "test1"));
         studentList.add(new Student("333", "test2"));
 
-        studentDAO.create(studentList.get(0));
-        studentDAO.create(studentList.get(1));
-        studentDAO.create(studentList.get(2));
+        for (Student student : studentList)
+            studentDAO.create(student);
 
         int deletedStudents = studentDAO.delete("111");
         assertEquals(1, deletedStudents);
@@ -102,9 +97,8 @@ class StudentDAOMySQLImplementationTest {
         studentList.add(new Student("222", "test1"));
         studentList.add(new Student("333", "test2"));
 
-        studentDAO.create(studentList.get(0));
-        studentDAO.create(studentList.get(1));
-        studentDAO.create(studentList.get(2));
+        for (Student student : studentList)
+            studentDAO.create(student);
 
         studentDAO.deleteAll();
         assertEquals(0, studentDAO.retrieve().size());
