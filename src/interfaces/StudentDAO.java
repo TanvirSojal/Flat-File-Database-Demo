@@ -18,6 +18,6 @@ public interface StudentDAO {
     Student update(String studentId, Student student);
 
     // DELETE
-    boolean delete(String studentId);
+    int delete(String studentId);
     boolean deleteAll();
 }

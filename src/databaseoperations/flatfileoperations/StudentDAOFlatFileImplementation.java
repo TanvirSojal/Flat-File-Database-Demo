@@ -113,12 +113,13 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
     }
 
     @Override
-    public boolean delete(String studentId) {
-
+    public int delete(String studentId) {
         List<Student> studentList = retrieve();
+        int rowsAffected = 0;
         for (Student s : studentList){
             if (s.getId().equals(studentId)){
                 studentList.remove(s);
+                rowsAffected++;
                 break;
             }
         }
@@ -132,11 +133,11 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
                 String studentJSON = gson.toJson(s);
                 output.writeBytes(studentJSON + "\n");
             }
-            return true;
+            return rowsAffected;
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
         }
-        return false;
+        return 0;
     }
 
     @Override

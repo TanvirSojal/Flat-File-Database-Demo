@@ -98,18 +98,18 @@ public class StudentDAOMySQLImplementation implements StudentDAO {
     }
 
     @Override
-    public boolean delete(String studentId) {
+    public int delete(String studentId) {
         String query = String.format("DELETE FROM Student WHERE id=?");
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, studentId);
-            preparedStatement.executeUpdate();
-            return true;
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
-        return false;
+        return 0;
     }
 
     @Override
@@ -118,6 +118,7 @@ public class StudentDAOMySQLImplementation implements StudentDAO {
         Connection connection = DBConnection.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.executeUpdate();
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException sqle) {

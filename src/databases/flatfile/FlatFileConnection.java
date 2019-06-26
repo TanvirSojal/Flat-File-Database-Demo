@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class FlatFileConnection {
-    private static String filename = "Student.txt";
+    private static String filename = "Student.json";
     private static String path = "src" + File.separator + "databases" + File.separator + "flatfile" + File.separator + filename;
 
     private final static FlatFileConnection INSTANCE = new FlatFileConnection();

@@ -23,7 +23,7 @@ public class Main {
 
         studentMySQL = studentDAOMySQL.update("2013100000007", new Student("2013100000007", "Magician"));
 
-        boolean b = studentDAOMySQL.delete("2013200000055");
+        studentDAOMySQL.delete("2013200000055");
 
         // printing all students
         System.out.println("\nPrinting All students:");
@@ -55,7 +55,7 @@ public class Main {
         studentFlatFile = studentDAOFlatFile.update("2013100000007", new Student("2013100000007", "Mosa"));
         studentFlatFile = studentDAOFlatFile.update("2013200000105", new Student("2013200000105", "Duke"));
 
-        boolean d = studentDAOFlatFile.delete("234");
+        studentDAOFlatFile.delete("234");
 
         // printing all students
         System.out.println("\nPrinting All students:");
