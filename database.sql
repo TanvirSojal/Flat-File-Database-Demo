@@ -20,9 +20,9 @@ CREATE TABLE Course(
 
 CREATE TABLE Section(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    SectionNumber INT,
-    Semester INT,
-    SeatLimit INT,
+    sectionNumber INT,
+    semester INT,
+    seatLimit INT,
     code VARCHAR(8),
     initials VARCHAR(4),
 

@@ -5,13 +5,15 @@ import java.util.Objects;
 public class Section {
     private int id;
     private int sectionNumber;
+    private int semester;
     private int seatLimit;
     private String courseCode;
     private String initials;
 
-    public Section(int id, int sectionNumber, int seatLimit, String courseCode, String initials) {
+    public Section(int id, int sectionNumber, int semester, int seatLimit, String courseCode, String initials) {
         this.id = id;
         this.sectionNumber = sectionNumber;
+        this.semester = semester;
         this.seatLimit = seatLimit;
         this.courseCode = courseCode;
         this.initials = initials;
@@ -31,6 +33,14 @@ public class Section {
 
     public void setSectionNumber(int sectionNumber) {
         this.sectionNumber = sectionNumber;
+    }
+
+    public int getSemester() {
+        return semester;
+    }
+
+    public void setSemester(int semester) {
+        this.semester = semester;
     }
 
     public int getSeatLimit() {
@@ -62,6 +72,7 @@ public class Section {
         return "Section{" +
                 "id=" + id +
                 ", sectionNumber=" + sectionNumber +
+                ", semester=" + semester +
                 ", seatLimit=" + seatLimit +
                 ", courseCode='" + courseCode + '\'' +
                 ", initials='" + initials + '\'' +
@@ -75,6 +86,7 @@ public class Section {
         Section section = (Section) o;
         return getId() == section.getId() &&
                 getSectionNumber() == section.getSectionNumber() &&
+                getSemester() == section.getSemester() &&
                 getSeatLimit() == section.getSeatLimit() &&
                 Objects.equals(getCourseCode(), section.getCourseCode()) &&
                 Objects.equals(getInitials(), section.getInitials());
@@ -82,6 +94,6 @@ public class Section {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSectionNumber(), getSeatLimit(), getCourseCode(), getInitials());
+        return Objects.hash(getId(), getSectionNumber(), getSemester(), getSeatLimit(), getCourseCode(), getInitials());
     }
 }

@@ -10,12 +10,12 @@ public interface RegistrationDAO {
     Registration create(Registration registration);
 
     // RETRIEVE
-    Registration retrieve(int id);
+    Registration retrieve(int registrationId);
     List<Registration> retrieve();
     List<Registration> retrieve(Predicate<Registration> filter);
 
     // UPDATE
-    Registration update(int id, Registration registration);
+    Registration update(int registrationId, Registration registration);
 
     // DELETE
     int delete(int id);

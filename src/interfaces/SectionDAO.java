@@ -10,14 +10,14 @@ public interface SectionDAO {
     Section create(Section section);
 
     // RETRIEVE
-    Section retrieve(int id);
+    Section retrieve(int sectionId);
     List<Section> retrieve();
     List<Section> retrieve(Predicate<Section> filter);
 
     // UPDATE
-    Section update(int id, Section section);
+    Section update(int sectionId, Section section);
 
     // DELETE
-    int delete(int id);
+    int delete(int sectionId);
     boolean deleteAll();
 }
