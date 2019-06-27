@@ -30,7 +30,7 @@ public class RegistrationDAOMySQLImplementation implements RegistrationDAO {
         try{
             connection = DBConnection.getConnection();
 
-            InputStream inputStream = getClass().getResourceAsStream("resources/query_student.properties");
+            InputStream inputStream = getClass().getResourceAsStream("resources/query_registration.properties");
             InputStreamReader fileReader = new InputStreamReader(inputStream);
 
             Properties properties = new Properties();

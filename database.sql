@@ -26,15 +26,15 @@ CREATE TABLE Section(
     code VARCHAR(8),
     initials VARCHAR(4),
 
-    FOREIGN KEY (code) REFERENCES Course(code),
-    FOREIGN KEY (initials) REFERENCES Faculty(initials)
+    FOREIGN KEY (code) REFERENCES Course(code) ON DELETE SET NULL,
+    FOREIGN KEY (initials) REFERENCES Faculty(initials) ON DELETE SET NULL
 );
 
 CREATE TABLE REGISTRATION(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    studentId VARCHAR(13) NOT NULL,
-    sectionId INT NOT NULL,
+    studentId VARCHAR(13),
+    sectionId INT,
 
-    FOREIGN KEY (studentId) REFERENCES Student(id),
-    FOREIGN KEY (sectionId) REFERENCES Section(id)
+    FOREIGN KEY (studentId) REFERENCES Student(id) ON DELETE SET NULL,
+    FOREIGN KEY (sectionId) REFERENCES Section(id) ON DELETE SET NULL
 );
