@@ -1,48 +1,145 @@
 package databaseoperations.flatfileoperations;
 
+import com.google.gson.Gson;
 import databases.flatfile.FlatFileConnection;
 import entities.Section;
 import interfaces.SectionDAO;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class SectionDAOFlatFileImplementation implements SectionDAO {
+    private String path;
+    private Gson gson;
+
+    public SectionDAOFlatFileImplementation(){
+        path = FlatFileConnection.getSectionFilePath();
+        gson = new Gson();
+    }
+
     @Override
     public Section create(Section section) {
-        return null;
+        String sectionJSON = gson.toJson(section);
+
+        if (retrieve(section.getId()) == null){
+            try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
+                long fileLength = output.length();
+                output.seek(fileLength);
+                output.writeBytes(sectionJSON + "\n");
+            } catch (FileNotFoundException e) {
+                System.err.println("File could not be found!");
+            } catch (IOException e) {
+                System.err.println("File could not be accessed!");
+            }
+        }
+        return retrieve(section.getId());
     }
 
     @Override
     public Section retrieve(int sectionId) {
-        return null;
+        Section section = null;
+        try(RandomAccessFile input = new RandomAccessFile(path, "r")) {
+            String element;
+            while(true){
+                element = input.readLine();
+                if (element == null)
+                    break;
+                if(gson.fromJson(element, Section.class).getId() == sectionId){ // parsing from json
+                    section = gson.fromJson(element, Section.class);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File could not be found!");
+        } catch (IOException e) {
+            System.err.println("File could not be accessed!");
+        }
+        return section;
     }
 
     @Override
     public List<Section> retrieve() {
-        return null;
+        List<Section> sectionList = new ArrayList<>();
+        try(RandomAccessFile input = new RandomAccessFile(path, "r")) {
+            String element;
+            while(true){
+                element = input.readLine();
+                if (element == null)
+                    break;
+                Section section = gson.fromJson(element, Section.class); // parsing from json
+                sectionList.add(section);
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File could not be found!");
+        } catch (IOException e) {
+            System.err.println("File could not be accessed!");
+        }
+        return sectionList;
     }
 
     @Override
     public List<Section> retrieve(Predicate<Section> filter) {
-        return null;
+        List<Section> sectionList = retrieve();
+        return sectionList.stream()
+                .filter(filter)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Section update(int sectionId, Section section) {
-        return null;
+        List<Section> sectionList = retrieve();
+        try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
+            deleteAll(); // clearing the file
+            for (Section s : sectionList){
+                if (s.getId() == sectionId){ // updating attribute(s)
+                    s.setSectionNumber(section.getSectionNumber());
+                    s.setSemester(section.getSemester());
+                    s.setSeatLimit(section.getSeatLimit());
+                    s.setCourseCode(section.getCourseCode());
+                    s.setInitials(section.getInitials());
+                }
+                String studentJSON = gson.toJson(s);
+                output.writeBytes(studentJSON + "\n");
+            }
+        } catch (IOException ioe){
+            System.err.println("File could not be accessed!");
+        }
+        return retrieve(sectionId);
     }
 
     @Override
     public int delete(int sectionId) {
+        List<Section> sectionList = retrieve();
+        int sizeBefore = sectionList.size();
+        for (Section s : sectionList){
+            if (s.getId() == sectionId){
+                sectionList.remove(s);
+                break;
+            }
+        }
+
+        try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
+            deleteAll(); // clearing the file
+            int sizeAfter = 0;
+            for (Section s : sectionList){
+                String sectionJSON = gson.toJson(s);
+                output.writeBytes(sectionJSON + "\n");
+                sizeAfter++;
+            }
+            return sizeBefore - sizeAfter;
+        } catch (IOException ioe){
+            System.err.println("File could not be accessed!");
+        }
         return 0;
     }
 
     @Override
     public boolean deleteAll() {
-        String path = FlatFileConnection.getSectionFilePath();
         try(PrintWriter pw = new PrintWriter(path)){
             pw.close();
             return true;
