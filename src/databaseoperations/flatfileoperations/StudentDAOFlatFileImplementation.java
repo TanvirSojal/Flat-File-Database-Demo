@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class StudentDAOFlatFileImplementation implements StudentDAO {
     @Override
     public Student create(Student student) {
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         Gson gson = new Gson();
         String studentJSON = gson.toJson(student); // json format of student object
         // System.out.println(studentJSON);
@@ -37,7 +37,7 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
 
     @Override
     public Student retrieve(String studentId) {
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         Gson gson = new Gson();
         Student student = null;
 
@@ -62,7 +62,7 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
     @Override
     public List<Student> retrieve() {
         List <Student> studentList = new ArrayList<>();
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         Gson gson = new Gson();
 
         try(RandomAccessFile input = new RandomAccessFile(path, "r")) {
@@ -94,7 +94,7 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
     public Student update(String studentId, Student student) {
         List<Student> studentList = retrieve();
 
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         Gson gson = new Gson();
 
         try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
@@ -123,7 +123,7 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
             }
         }
 
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         Gson gson = new Gson();
 
         try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
@@ -143,7 +143,7 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
 
     @Override
     public boolean deleteAll() {
-        String path = FlatFileConnection.getFilePath();
+        String path = FlatFileConnection.getStudentFilePath();
         try(PrintWriter pw = new PrintWriter(path)){
             pw.close();
             return true;

@@ -69,7 +69,8 @@ public class Main {
         filteredStudentListFile.forEach(System.out::println);
     }
     public Main(){
-        studentTableDemo();
+        StudentDAO studentDAO = new StudentDAOFlatFileImplementation();
+        studentDAO.deleteAll();
     }
 
     public static void main(String[] args) {
