@@ -1,3 +1,5 @@
+package MySQLTests;
+
 import databaseoperations.mysqloperations.FacultyDAOMySQLImplementation;
 import entities.Faculty;
 import interfaces.FacultyDAO;

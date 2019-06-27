@@ -1,3 +1,5 @@
+package MySQLTests;
+
 import databaseoperations.mysqloperations.CourseDAOMySQLImplementation;
 import databaseoperations.mysqloperations.FacultyDAOMySQLImplementation;
 import databaseoperations.mysqloperations.SectionDAOMySQLImplementation;

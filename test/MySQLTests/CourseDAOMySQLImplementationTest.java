@@ -1,3 +1,5 @@
+package MySQLTests;
+
 import databaseoperations.mysqloperations.CourseDAOMySQLImplementation;
 import entities.Course;
 import interfaces.CourseDAO;

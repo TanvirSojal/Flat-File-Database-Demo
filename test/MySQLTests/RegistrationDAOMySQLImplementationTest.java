@@ -1,3 +1,5 @@
+package MySQLTests;
+
 import databaseoperations.flatfileoperations.StudentDAOFlatFileImplementation;
 import databaseoperations.mysqloperations.*;
 import entities.*;
