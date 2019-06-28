@@ -1,5 +1,6 @@
 package databaseoperations.mysqloperations;
 
+import databaseoperations.Exceptions.DataFormatException;
 import databases.mysql.DBConnection;
 import entities.Student;
 import interfaces.StudentDAO;
@@ -51,12 +52,19 @@ public class StudentDAOMySQLImplementation implements StudentDAO {
     @Override
     public Student create(Student student) {
         try{
+            if (student.getId().length() > 13){
+                System.out.println("here");
+                throw new DataFormatException("Student ID length can not be more than 13 digits long.");
+            }
+
             preparedStatementCreate.setString(1, student.getId());
             preparedStatementCreate.setString(2, student.getName());
             preparedStatementCreate.executeUpdate();
 
         } catch (SQLException sqle){
             sqle.printStackTrace();
+        } catch (DataFormatException e) {
+            System.err.println(e.getMessage());
         }
 
         return retrieve(student.getId());

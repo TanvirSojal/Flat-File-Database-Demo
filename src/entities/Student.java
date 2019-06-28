@@ -27,6 +27,17 @@ public class Student {
         this.name = name;
     }
 
+    public String toCSV(){
+        return (id + "," + name);
+    }
+
+    public static Student fromCSV(String csv){
+        String tokens[] = csv.split(",");
+        if (tokens.length != 2)
+            return null;
+        return new Student(tokens[0], tokens[1]);
+    }
+
     @Override
     public String toString() {
         return "Student{" +

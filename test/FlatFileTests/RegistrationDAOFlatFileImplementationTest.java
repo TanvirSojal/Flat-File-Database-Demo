@@ -28,6 +28,31 @@ class RegistrationDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testToCSV(){
+        studentDAO.create(new Student("123", "test"));
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        sectionDAO.create(new Section(1, 1, 10, 30, "CSE101", "ABC"));
+
+        Registration registration = new Registration(1, "123", 1);
+        String registrationCSV = registration.toCSV();
+        assertEquals("1,123,1", registrationCSV);
+    }
+
+    @Test
+    void testFromCSV(){
+        studentDAO.create(new Student("123", "test"));
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        sectionDAO.create(new Section(1, 1, 10, 30, "CSE101", "ABC"));
+
+        Registration registration = new Registration(1, "123", 1);
+        String registrationCSV = registration.toCSV();
+        Registration parsedRegistration = Registration.fromCSV(registrationCSV);
+        assertEquals(registration, parsedRegistration);
+    }
+
+    @Test
     void testCreate() {
         studentDAO.create(new Student("123", "test"));
         courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));

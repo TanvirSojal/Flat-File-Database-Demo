@@ -1,6 +1,6 @@
 package databaseoperations.flatfileoperations;
 
-import com.google.gson.Gson;
+import databaseoperations.Exceptions.DataFormatException;
 import databases.flatfile.FlatFileConnection;
 import entities.Student;
 import interfaces.StudentDAO;
@@ -16,22 +16,28 @@ import java.util.stream.Collectors;
 
 public class StudentDAOFlatFileImplementation implements StudentDAO {
     private String path;
-    private Gson gson;
 
     public StudentDAOFlatFileImplementation(){
          path = FlatFileConnection.getStudentFilePath();
-         gson = new Gson();
     }
 
     @Override
     public Student create(Student student) {
-        String studentJSON = gson.toJson(student); // json format of student object
+        try{
+            if (student.getId().length() > 13){
+                throw new DataFormatException("Student ID length can not be more than 13 digits long.");
+            }
+        } catch (DataFormatException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String studentCSV = student.toCSV(); // CSV format of Student object
 
         if (retrieve(student.getId()) == null){ // if student does not exist already
             try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
                 long fileLength = output.length();
                 output.seek(fileLength);
-                output.writeBytes(studentJSON + "\n");
+                output.writeBytes(studentCSV + "\n");
             } catch (FileNotFoundException e) {
                 System.err.println("File could not be found!");
             } catch (IOException e) {
@@ -45,15 +51,14 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
     @Override
     public Student retrieve(String studentId) {
         Student student = null;
-
         try(RandomAccessFile input = new RandomAccessFile(path, "r")) {
             String element;
             while(true){
                 element = input.readLine();
                 if (element == null)
                     break;
-                if(gson.fromJson(element, Student.class).getId().equals(studentId)){ // parsing from json
-                    student = gson.fromJson(element, Student.class);
+                if(Student.fromCSV(element).getId().equals(studentId)){ // parsing from CSV
+                    student = Student.fromCSV(element);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -67,14 +72,13 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
     @Override
     public List<Student> retrieve() {
         List <Student> studentList = new ArrayList<>();
-
         try(RandomAccessFile input = new RandomAccessFile(path, "r")) {
             String element;
             while(true){
                 element = input.readLine();
                 if (element == null)
                     break;
-                Student student = gson.fromJson(element, Student.class); // parsing from json
+                Student student = Student.fromCSV(element); // parsing from CSV
                 studentList.add(student);
             }
         } catch (FileNotFoundException e) {
@@ -102,8 +106,8 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
                 if (s.getId().equals(studentId)){ // updating attribute(s)
                     s.setName(student.getName());
                 }
-                String studentJSON = gson.toJson(s);
-                output.writeBytes(studentJSON + "\n");
+                String studentCSV = s.toCSV();
+                output.writeBytes(studentCSV + "\n");
             }
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
@@ -126,8 +130,8 @@ public class StudentDAOFlatFileImplementation implements StudentDAO {
             deleteAll(); // clearing the file
             int sizeAfter = 0;
             for (Student s : studentList){
-                String studentJSON = gson.toJson(s);
-                output.writeBytes(studentJSON + "\n");
+                String studentCSV = s.toCSV();
+                output.writeBytes(studentCSV + "\n");
                 sizeAfter++;
             }
             return sizeBefore - sizeAfter;

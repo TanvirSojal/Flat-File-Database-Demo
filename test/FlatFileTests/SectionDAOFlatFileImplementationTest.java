@@ -9,6 +9,7 @@ import entities.Section;
 import interfaces.CourseDAO;
 import interfaces.FacultyDAO;
 import interfaces.SectionDAO;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,25 @@ class SectionDAOFlatFileImplementationTest {
         courseDAO.deleteAll();
         facultyDAO.deleteAll();
         sectionDAO.deleteAll();
+    }
+
+    @Test
+    void testToCSV(){
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        Section section = new Section(1, 1, 10, 30, "CSE101", "ABC");
+        String sectionCSV = section.toCSV();
+        assertEquals("1,1,10,30,CSE101,ABC", sectionCSV);
+    }
+
+    @Test
+    void testFromCSV(){
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        Section section = new Section(1, 1, 10, 30, "CSE101", "ABC");
+        String sectionCSV = section.toCSV();
+        Section parsedSection = Section.fromCSV(sectionCSV);
+        assertEquals(section, parsedSection);
     }
 
     @Test

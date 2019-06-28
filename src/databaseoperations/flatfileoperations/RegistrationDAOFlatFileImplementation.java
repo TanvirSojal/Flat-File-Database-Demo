@@ -16,22 +16,20 @@ import java.util.stream.Collectors;
 
 public class RegistrationDAOFlatFileImplementation implements RegistrationDAO {
     private String path;
-    private Gson gson;
 
     public RegistrationDAOFlatFileImplementation(){
         path = FlatFileConnection.getRegistrationFilePath();
-        gson = new Gson();
     }
 
     @Override
     public Registration create(Registration registration) {
-        String registrationJSON = gson.toJson(registration);
+        String registrationCSV = registration.toCSV();
 
         if (retrieve(registration.getId()) == null){ // if student does not exist already
             try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
                 long fileLength = output.length();
                 output.seek(fileLength);
-                output.writeBytes(registrationJSON + "\n");
+                output.writeBytes(registrationCSV + "\n");
             } catch (FileNotFoundException e) {
                 System.err.println("File could not be found!");
             } catch (IOException e) {
@@ -52,8 +50,8 @@ public class RegistrationDAOFlatFileImplementation implements RegistrationDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                if(gson.fromJson(element, Registration.class).getId() == registrationId){ // parsing from json
-                    registration = gson.fromJson(element, Registration.class);
+                if(Registration.fromCSV(element).getId() == registrationId){ // parsing from csv
+                    registration = Registration.fromCSV(element);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -73,7 +71,7 @@ public class RegistrationDAOFlatFileImplementation implements RegistrationDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                Registration registration = gson.fromJson(element, Registration.class); // parsing from json
+                Registration registration = Registration.fromCSV(element); // parsing from csv
                 registrationList.add(registration);
             }
         } catch (FileNotFoundException e) {
@@ -102,8 +100,8 @@ public class RegistrationDAOFlatFileImplementation implements RegistrationDAO {
                     r.setStudentId(registration.getStudentId());
                     r.setSectionId(registration.getSectionId());
                 }
-                String registrationJSON = gson.toJson(r);
-                output.writeBytes(registrationJSON + "\n");
+                String registrationCSV = r.toCSV();
+                output.writeBytes(registrationCSV + "\n");
             }
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
@@ -126,8 +124,8 @@ public class RegistrationDAOFlatFileImplementation implements RegistrationDAO {
             deleteAll(); // clearing the file
             int sizeAfter = 0;
             for (Registration r : registrationList){
-                String registrationJSON = gson.toJson(r);
-                output.writeBytes(registrationJSON + "\n");
+                String registrationCSV = r.toCSV();
+                output.writeBytes(registrationCSV + "\n");
                 sizeAfter++;
             }
             return sizeBefore - sizeAfter;

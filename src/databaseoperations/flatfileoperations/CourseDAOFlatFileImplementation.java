@@ -15,23 +15,21 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CourseDAOFlatFileImplementation implements CourseDAO {
-    String path;
-    Gson gson;
+    private String path;
 
     public CourseDAOFlatFileImplementation(){
         path = FlatFileConnection.getCourseFilePath();
-        gson = new Gson();
     }
 
     @Override
     public Course create(Course course) {
-        String courseJSON = gson.toJson(course);
+        String courseCSV = course.toCSV();
 
         if (retrieve(course.getCode()) == null){
             try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
                 long fileLength = output.length();
                 output.seek(fileLength);
-                output.writeBytes(courseJSON + "\n");
+                output.writeBytes(courseCSV + "\n");
             } catch (IOException ioe){
                 System.err.println("File could not be accessed!");
             }
@@ -49,8 +47,8 @@ public class CourseDAOFlatFileImplementation implements CourseDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                if(gson.fromJson(element, Course.class).getCode().equals(code)){ // parsing from json
-                    course = gson.fromJson(element, Course.class);
+                if(Course.fromCSV(element).getCode().equals(code)){ // parsing from csv
+                    course = Course.fromCSV(element);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -70,7 +68,7 @@ public class CourseDAOFlatFileImplementation implements CourseDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                Course course = gson.fromJson(element, Course.class); // parsing from json
+                Course course = Course.fromCSV(element); // parsing from csv
                 courseList.add(course);
             }
         } catch (FileNotFoundException e) {
@@ -99,8 +97,8 @@ public class CourseDAOFlatFileImplementation implements CourseDAO {
                     c.setTitle(course.getTitle());
                     c.setCredit(course.getCredit());
                 }
-                String courseJSON = gson.toJson(c);
-                output.writeBytes(courseJSON + "\n");
+                String courseCSV = c.toCSV();
+                output.writeBytes(courseCSV + "\n");
             }
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
@@ -123,8 +121,8 @@ public class CourseDAOFlatFileImplementation implements CourseDAO {
             deleteAll(); // clearing the file
             int sizeAfter = 0;
             for (Course c : courseList){
-                String courseJSON = gson.toJson(c);
-                output.writeBytes(courseJSON + "\n");
+                String courseCSV = c.toCSV();
+                output.writeBytes(courseCSV + "\n");
                 sizeAfter++;
             }
             return sizeBefore - sizeAfter;

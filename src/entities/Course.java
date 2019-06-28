@@ -37,6 +37,17 @@ public class Course {
         this.credit = credit;
     }
 
+    public String toCSV(){
+        return (code + "," + title + "," + credit);
+    }
+
+    public static Course fromCSV(String csv){
+        String tokens[] = csv.split(",");
+        if (tokens.length != 3)
+            return null;
+        return new Course(tokens[0], tokens[1], Double.parseDouble(tokens[2]));
+    }
+
     @Override
     public String toString() {
         return "Course{" +

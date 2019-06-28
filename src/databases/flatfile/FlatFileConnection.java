@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class FlatFileConnection {
-    private static String studentFile = "student.json";
-    private static String facultyFile = "faculty.json";
-    private static String courseFile = "course.json";
-    private static String sectionFile = "section.json";
-    private static String registrationFile = "registration.json";
+    private static String studentFile = "student.csv";
+    private static String facultyFile = "faculty.csv";
+    private static String courseFile = "course.csv";
+    private static String sectionFile = "section.csv";
+    private static String registrationFile = "registration.csv";
 
     private static String studentFilePath = "src" + File.separator + "databases" + File.separator + "flatfile" + File.separator + "files" + File.separator + studentFile;
     private static String facultyFilePath = "src" + File.separator + "databases" + File.separator + "flatfile" + File.separator + "files" + File.separator + facultyFile;

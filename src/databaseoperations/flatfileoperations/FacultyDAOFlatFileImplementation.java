@@ -16,22 +16,20 @@ import java.util.stream.Collectors;
 
 public class FacultyDAOFlatFileImplementation implements FacultyDAO {
     private String path;
-    private Gson gson;
 
     public FacultyDAOFlatFileImplementation(){
         path = FlatFileConnection.getFacultyFilePath();
-        gson = new Gson();
     }
 
     @Override
     public Faculty create(Faculty faculty) {
-        String facultyJson = gson.toJson(faculty);
+        String facultyCSV = faculty.toCSV();
 
         if (retrieve(faculty.getInitials()) == null){
             try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
                 long fileLength = output.length();
                 output.seek(fileLength);
-                output.writeBytes(facultyJson + "\n");
+                output.writeBytes(facultyCSV + "\n");
             } catch (FileNotFoundException e) {
                 System.err.println("File could not be found!");
             } catch (IOException e) {
@@ -51,8 +49,8 @@ public class FacultyDAOFlatFileImplementation implements FacultyDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                if(gson.fromJson(element, Faculty.class).getInitials().equals(initials)){ // parsing from json
-                    faculty = gson.fromJson(element, Faculty.class);
+                if(Faculty.fromCSV(element).getInitials().equals(initials)){ // parsing from csv
+                    faculty = Faculty.fromCSV(element);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -73,7 +71,7 @@ public class FacultyDAOFlatFileImplementation implements FacultyDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                Faculty faculty = gson.fromJson(element, Faculty.class); // parsing from json
+                Faculty faculty = Faculty.fromCSV(element); // parsing from csv
                 facultyList.add(faculty);
             }
         } catch (FileNotFoundException e) {
@@ -104,8 +102,8 @@ public class FacultyDAOFlatFileImplementation implements FacultyDAO {
                     f.setName(faculty.getName());
                     f.setRank(faculty.getRank());
                 }
-                String facultyJson = gson.toJson(f);
-                output.writeBytes(facultyJson + "\n");
+                String facultyCSV = f.toCSV();
+                output.writeBytes(facultyCSV + "\n");
             }
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
@@ -128,8 +126,8 @@ public class FacultyDAOFlatFileImplementation implements FacultyDAO {
             deleteAll(); // clearing the file
             int sizeAfter = 0;
             for (Faculty s : facultyList){
-                String facultyJson = gson.toJson(s);
-                output.writeBytes(facultyJson + "\n");
+                String facultyCSV = s.toCSV();
+                output.writeBytes(facultyCSV + "\n");
                 sizeAfter++;
             }
             return sizeBefore - sizeAfter;

@@ -3,6 +3,8 @@ package FlatFileTests;
 import databaseoperations.flatfileoperations.StudentDAOFlatFileImplementation;
 import entities.Student;
 import interfaces.StudentDAO;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +19,21 @@ class StudentDAOFlatFileImplementationTest {
     @BeforeEach
     void setUp() {
         studentDAO.deleteAll();
+    }
+
+    @Test
+    void testToCSV(){
+        Student student = new Student("123", "test");
+        String studentCSV = student.toCSV();
+        assertEquals("123,test", studentCSV);
+    }
+
+    @Test
+    void testFromCSV(){
+        Student student = new Student("123", "test");
+        String studentCSV = student.toCSV();
+        Student parsedStudent = Student.fromCSV(studentCSV);
+        assertEquals(parsedStudent, student);
     }
 
     @Test

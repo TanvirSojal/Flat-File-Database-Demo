@@ -3,8 +3,6 @@ package MySQLTests;
 import databaseoperations.mysqloperations.CourseDAOMySQLImplementation;
 import entities.Course;
 import interfaces.CourseDAO;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

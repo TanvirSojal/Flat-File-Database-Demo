@@ -20,6 +20,21 @@ class CourseDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testToCSV(){
+        Course course = new Course("CSE101", "Computer Fundamentals", 3.0);
+        String courseCSV = course.toCSV();
+        assertEquals("CSE101,Computer Fundamentals,3.0", courseCSV);
+    }
+
+    @Test
+    void testFromCSV(){
+        Course course = new Course("CSE101", "Computer Fundamentals", 3.0);
+        String courseCSV = course.toCSV();
+        Course parsedCourse = Course.fromCSV(courseCSV);
+        assertEquals(course, parsedCourse);
+    }
+
+    @Test
     void testCreate() {
         Course course = new Course("CSE101", "Computer Fundamentals", 3.0);
         Course createdCourse = courseDAO.create(course);

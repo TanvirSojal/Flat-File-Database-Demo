@@ -16,22 +16,20 @@ import java.util.stream.Collectors;
 
 public class SectionDAOFlatFileImplementation implements SectionDAO {
     private String path;
-    private Gson gson;
 
     public SectionDAOFlatFileImplementation(){
         path = FlatFileConnection.getSectionFilePath();
-        gson = new Gson();
     }
 
     @Override
     public Section create(Section section) {
-        String sectionJSON = gson.toJson(section);
+        String sectionCSV = section.toCSV();
 
         if (retrieve(section.getId()) == null){
             try(RandomAccessFile output = new RandomAccessFile(path, "rw")){
                 long fileLength = output.length();
                 output.seek(fileLength);
-                output.writeBytes(sectionJSON + "\n");
+                output.writeBytes(sectionCSV + "\n");
             } catch (FileNotFoundException e) {
                 System.err.println("File could not be found!");
             } catch (IOException e) {
@@ -50,8 +48,8 @@ public class SectionDAOFlatFileImplementation implements SectionDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                if(gson.fromJson(element, Section.class).getId() == sectionId){ // parsing from json
-                    section = gson.fromJson(element, Section.class);
+                if(Section.fromCSV(element).getId() == sectionId){ // parsing from csv
+                    section = Section.fromCSV(element);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -71,7 +69,7 @@ public class SectionDAOFlatFileImplementation implements SectionDAO {
                 element = input.readLine();
                 if (element == null)
                     break;
-                Section section = gson.fromJson(element, Section.class); // parsing from json
+                Section section = Section.fromCSV(element); // parsing from csv
                 sectionList.add(section);
             }
         } catch (FileNotFoundException e) {
@@ -103,8 +101,8 @@ public class SectionDAOFlatFileImplementation implements SectionDAO {
                     s.setCourseCode(section.getCourseCode());
                     s.setInitials(section.getInitials());
                 }
-                String studentJSON = gson.toJson(s);
-                output.writeBytes(studentJSON + "\n");
+                String sectionCSV = s.toCSV();
+                output.writeBytes(sectionCSV + "\n");
             }
         } catch (IOException ioe){
             System.err.println("File could not be accessed!");
@@ -127,8 +125,8 @@ public class SectionDAOFlatFileImplementation implements SectionDAO {
             deleteAll(); // clearing the file
             int sizeAfter = 0;
             for (Section s : sectionList){
-                String sectionJSON = gson.toJson(s);
-                output.writeBytes(sectionJSON + "\n");
+                String sectionCSV = s.toCSV();
+                output.writeBytes(sectionCSV + "\n");
                 sizeAfter++;
             }
             return sizeBefore - sizeAfter;

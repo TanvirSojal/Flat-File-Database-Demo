@@ -37,6 +37,17 @@ public class Faculty {
         this.rank = rank;
     }
 
+    public String toCSV(){
+        return (initials + "," + name + "," + rank);
+    }
+
+    public static Faculty fromCSV(String csv){
+        String tokens[] = csv.split(",");
+        if (tokens.length != 3)
+            return null;
+        return new Faculty(tokens[0], tokens[1], tokens[2]);
+    }
+
     @Override
     public String toString() {
         return "Faculty{" +

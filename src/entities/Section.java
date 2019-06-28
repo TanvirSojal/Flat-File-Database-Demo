@@ -67,6 +67,17 @@ public class Section {
         this.initials = initials;
     }
 
+    public String toCSV(){
+        return (id + "," + sectionNumber + "," + semester + "," + seatLimit + "," + courseCode + "," + initials);
+    }
+
+    public static Section fromCSV(String csv){
+        String tokens[] = csv.split(",");
+        if (tokens.length != 6)
+            return null;
+        return new Section(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), tokens[4], tokens[5]);
+    }
+
     @Override
     public String toString() {
         return "Section{" +

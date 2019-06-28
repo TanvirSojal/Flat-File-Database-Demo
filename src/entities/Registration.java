@@ -37,6 +37,17 @@ public class Registration {
         this.sectionId = sectionId;
     }
 
+    public String toCSV(){
+        return (id + "," + studentId + "," + sectionId);
+    }
+
+    public static Registration fromCSV(String csv){
+        String tokens[] = csv.split(",");
+        if (tokens.length != 3)
+            return null;
+        return new Registration(Integer.parseInt(tokens[0]), tokens[1], Integer.parseInt(tokens[2]));
+    }
+
     @Override
     public String toString() {
         return "Registration{" +
