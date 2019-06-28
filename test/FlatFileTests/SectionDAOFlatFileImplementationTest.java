@@ -99,6 +99,18 @@ class SectionDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testUpdateWithWrongId() {
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        Section section = new Section(1, 1, 10, 30, "CSE101", "ABC");
+        sectionDAO.create(section);
+
+        Section modifiedSection = new Section(1, 1, 12, 25, "CSE101", "ABC");
+        Section updatedSection = sectionDAO.update(60, modifiedSection);
+        assertNull(updatedSection);
+    }
+
+    @Test
     void testDelete() {
         courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
         facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
@@ -113,6 +125,23 @@ class SectionDAOFlatFileImplementationTest {
 
         int deletedSections = sectionDAO.delete(2);
         assertEquals(1, deletedSections);
+    }
+
+    @Test
+    void testDeleteNonExistent() {
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+
+        List<Section> sectionList = new ArrayList<>();
+        sectionList.add(new Section(1, 1, 10, 30, "CSE101", "ABC"));
+        sectionList.add(new Section(2, 2, 10, 35, "CSE101", "ABC"));
+        sectionList.add(new Section(3, 3, 10, 25, "CSE101", "ABC"));
+
+        for (Section section : sectionList)
+            sectionDAO.create(section);
+
+        int deletedSections = sectionDAO.delete(100);
+        assertEquals(0, deletedSections);
     }
 
     @Test

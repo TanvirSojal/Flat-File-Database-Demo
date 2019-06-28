@@ -78,6 +78,15 @@ class CourseDAOMySQLImplementationTest {
     }
 
     @Test
+    void testUpdateWithWrongId() {
+        Course course = new Course("CSE101", "Computer Fundamentals", 3.0);
+        courseDAO.create(course);
+        Course modifiedCourse = new Course("CSE101", "Introduction to CS", 3.5);
+        Course updatedCourse = courseDAO.update("CSE501", modifiedCourse);
+        assertNull(updatedCourse); // the modification will not affect, will return null
+    }
+
+    @Test
     void testDelete() {
         List<Course> courseList = new ArrayList<>();
         courseList.add(new Course("CSE101", "Computer Fundamentals", 3.0));
@@ -89,6 +98,20 @@ class CourseDAOMySQLImplementationTest {
 
         int deletedCourses = courseDAO.delete("CSE102");
         assertEquals(1, deletedCourses);
+    }
+
+    @Test
+    void testDeleteNonExistent() {
+        List<Course> courseList = new ArrayList<>();
+        courseList.add(new Course("CSE101", "Computer Fundamentals", 3.0));
+        courseList.add(new Course("CSE102", "Electrical Brain", 1.5));
+        courseList.add(new Course("CSE301", "Compiler Construction", 3.5));
+
+        for (Course course : courseList)
+            courseDAO.create(course);
+
+        int deletedCourses = courseDAO.delete("CSE105");
+        assertEquals(0, deletedCourses);
     }
 
     @Test

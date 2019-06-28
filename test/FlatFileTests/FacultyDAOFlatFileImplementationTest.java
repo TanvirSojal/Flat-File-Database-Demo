@@ -77,6 +77,15 @@ class FacultyDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testUpdateWithWrongId() {
+        Faculty faculty = new Faculty("ABC", "Another Boring Computer", "Lecturer");
+        facultyDAO.create(faculty);
+        Faculty modifiedFaculty = new Faculty("ABC", "Awesome Big Computer", "Professor");
+        Faculty updatedFaculty = facultyDAO.update("XYZ", modifiedFaculty);
+        assertNull(updatedFaculty); // the modification will not affect, will return null
+    }
+
+    @Test
     void testDelete() {
         List<Faculty> facultyList = new ArrayList<>();
         facultyList.add(new Faculty("AA", "Aaron Archer", "Senior Lecturer"));
@@ -88,6 +97,20 @@ class FacultyDAOFlatFileImplementationTest {
 
         int deletedFaculties = facultyDAO.delete("AA");
         assertEquals(1, deletedFaculties);
+    }
+
+    @Test
+    void testDeleteNonExistent() {
+        List<Faculty> facultyList = new ArrayList<>();
+        facultyList.add(new Faculty("AA", "Aaron Archer", "Senior Lecturer"));
+        facultyList.add(new Faculty("BB", "Ben Boxer", "Professor"));
+        facultyList.add(new Faculty("CC", "Cassy Catherine", "Lecturer"));
+
+        for (Faculty faculty : facultyList)
+            facultyDAO.create(faculty);
+
+        int deletedFaculties = facultyDAO.delete("EE");
+        assertEquals(0, deletedFaculties);
     }
 
     @Test

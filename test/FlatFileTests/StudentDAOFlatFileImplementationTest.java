@@ -76,6 +76,16 @@ class StudentDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testUpdateWithWrongId() {
+        Student student = new Student("123", "test");
+        studentDAO.create(student);
+
+        Student modifiedStudent = new Student("123", "John");
+        Student updatedStudent = studentDAO.update("678", modifiedStudent);
+        assertNull(updatedStudent);
+    }
+
+    @Test
     void testDelete() {
         List<Student> studentList = new ArrayList<>();
         studentList.add(new Student("111", "test0"));
@@ -87,6 +97,20 @@ class StudentDAOFlatFileImplementationTest {
 
         int deletedStudents = studentDAO.delete("111");
         assertEquals(1, deletedStudents);
+    }
+
+    @Test
+    void testDeleteNonExistent() {
+        List<Student> studentList = new ArrayList<>();
+        studentList.add(new Student("111", "test0"));
+        studentList.add(new Student("222", "test1"));
+        studentList.add(new Student("333", "test2"));
+
+        for (Student student : studentList)
+            studentDAO.create(student);
+
+        int deletedStudents = studentDAO.delete("555");
+        assertEquals(0, deletedStudents);
     }
 
     @Test

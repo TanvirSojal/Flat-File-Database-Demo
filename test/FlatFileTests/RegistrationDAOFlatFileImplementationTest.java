@@ -115,6 +115,22 @@ class RegistrationDAOFlatFileImplementationTest {
     }
 
     @Test
+    void testUpdateWithWrongId() {
+        studentDAO.create(new Student("123", "test"));
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        sectionDAO.create(new Section(1, 1, 10, 30, "CSE101", "ABC"));
+        sectionDAO.create(new Section(2, 1, 10, 35, "CSE101", "ABC"));
+
+        Registration registration = new Registration(1, "123", 1);
+        registrationDAO.create(registration);
+
+        Registration modifiedRegistration = new Registration(1, "123", 2);
+        Registration updatedRegistration = registrationDAO.update(50, modifiedRegistration);
+        assertNull(updatedRegistration);
+    }
+
+    @Test
     void testDelete() {
         studentDAO.create(new Student("111", "test0"));
         studentDAO.create(new Student("222", "test1"));
@@ -133,6 +149,27 @@ class RegistrationDAOFlatFileImplementationTest {
 
         int deletedRegistration = registrationDAO.delete(2);
         assertEquals(1, deletedRegistration);
+    }
+
+    @Test
+    void testDeleteNonExistent() {
+        studentDAO.create(new Student("111", "test0"));
+        studentDAO.create(new Student("222", "test1"));
+        studentDAO.create(new Student("333", "test2"));
+        courseDAO.create(new Course("CSE101", "Computer Fundamentals", 3.0));
+        facultyDAO.create(new Faculty("ABC", "Another Boring Computer", "Lecturer"));
+        sectionDAO.create(new Section(1, 1, 10, 30, "CSE101", "ABC"));
+
+        List<Registration> registrationList = new ArrayList<>();
+        registrationList.add(new Registration(1, "111", 1));
+        registrationList.add(new Registration(2, "222", 1));
+        registrationList.add(new Registration(3, "333", 1));
+
+        for (Registration registration : registrationList)
+            registrationDAO.create(registration);
+
+        int deletedRegistration = registrationDAO.delete(10);
+        assertEquals(0, deletedRegistration);
     }
 
     @Test
