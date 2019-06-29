@@ -1,6 +1,6 @@
 # Flat-file-Database-Demo
 
-This repository contains Flat-file CRUD operations implementation of a model class "Student" along with MySQL implementation. The database required to run this project can be created by running the provided SQL script "database.sql". (We will only need the "Student" table from there for now.)
+This repository contains Flat-file CRUD operation implementation of 5 model classes along with MySQL implementation. The database required to run this project can be created by running the provided SQL script "database.sql".
 
 ## Software used:
  * Intellij IDEA Community Edition 2018.2
@@ -18,5 +18,3 @@ This repository contains Flat-file CRUD operations implementation of a model cla
  * JDK 1.8.0_181
 
  * MySQL JDBC Driver 5.1.23
- 
- * Gson 2.8.5 (for creating and parsing json)
